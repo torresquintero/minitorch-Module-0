@@ -22,7 +22,7 @@ from minitorch.operators import (
     relu,
     relu_back,
     sigmoid,
-    sum,
+    summation,
     is_close,
 )
 
@@ -173,19 +173,18 @@ def test_zip_with(a: float, b: float, c: float, d: float) -> None:
     lists(small_floats, min_size=5, max_size=5),
     lists(small_floats, min_size=5, max_size=5),
 )
-def test_sum_distribute(ls1: List[float], ls2: List[float]) -> None:
+def test_summation_distribute(ls1: List[float], ls2: List[float]) -> None:
     """
-    Write a test that ensures that the sum of `ls1` plus the sum of `ls2`
+    Write a test that ensures that the summation of `ls1` plus the summation of `ls2`
     is the same as the sum of each element of `ls1` plus each element of `ls2`.
     """
-    # TODO: Implement for Task 0.3.
-    raise NotImplementedError("Need to implement for Task 0.3")
+    assert_close(summation(ls1) + summation(ls2), sum(ls1) + sum(ls2))
 
 
 @pytest.mark.task0_3
 @given(lists(small_floats))
-def test_sum(ls: List[float]) -> None:
-    assert_close(sum(ls), sum(ls))
+def test_summation(ls: List[float]) -> None:
+    assert_close(summation(ls), sum(ls))
 
 
 @pytest.mark.task0_3

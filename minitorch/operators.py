@@ -129,14 +129,15 @@ def map(fn: Callable[[float], float]) -> Callable[[Iterable[float]], Iterable[fl
         A function that takes a list, applies `fn` to each element, and returns a
          new list
     """
-    # TODO: Implement for Task 0.3.
-    raise NotImplementedError("Need to implement for Task 0.3")
+    def result(input_list: list):
+        return [fn(x) for x in input_list]
+    return result
 
 
 def negList(ls: Iterable[float]) -> Iterable[float]:
     "Use `map` and `neg` to negate each element in `ls`"
-    # TODO: Implement for Task 0.3.
-    raise NotImplementedError("Need to implement for Task 0.3")
+    negator = map(neg)
+    return negator(ls)
 
 
 def zipWith(
@@ -155,42 +156,55 @@ def zipWith(
          applying fn(x, y) on each pair of elements.
 
     """
-    # TODO: Implement for Task 0.3.
-    raise NotImplementedError("Need to implement for Task 0.3")
+    def result(ls1: list, ls2: list):
+        new_list = [fn(x, ls2[i]) for i, x in enumerate(ls1)]
+        return new_list
+
+    return result
 
 
 def addLists(ls1: Iterable[float], ls2: Iterable[float]) -> Iterable[float]:
     "Add the elements of `ls1` and `ls2` using `zipWith` and `add`"
-    # TODO: Implement for Task 0.3.
-    raise NotImplementedError("Need to implement for Task 0.3")
+    adder = zipWith(add)
+    return adder(ls1, ls2)
 
 
 def reduce(
-    fn: Callable[[float, float], float], start: float
+    fn: Callable[[float, float], float]
 ) -> Callable[[Iterable[float]], float]:
     r"""
     Higher-order reduce.
 
     Args:
         fn: combine two values
-        start: start value $x_0$
 
     Returns:
         Function that takes a list `ls` of elements
          $x_1 \ldots x_n$ and computes the reduction :math:`fn(x_3, fn(x_2,
          fn(x_1, x_0)))`
     """
-    # TODO: Implement for Task 0.3.
-    raise NotImplementedError("Need to implement for Task 0.3")
+
+    def result(ls: list):
+
+        def recursive_function(i, ls):
+            if i > 0:
+                return fn(ls[i], recursive_function(i - 1, ls))
+            return ls[i]
+
+        if ls == []:
+            return 0
+        return recursive_function(len(ls) - 1, ls)
+
+    return result
 
 
-def sum(ls: Iterable[float]) -> float:
+def summation(ls: Iterable[float]) -> float:
     "Sum up a list using `reduce` and `add`."
-    # TODO: Implement for Task 0.3.
-    raise NotImplementedError("Need to implement for Task 0.3")
+    adder = reduce(add)
+    return adder(ls)
 
 
 def prod(ls: Iterable[float]) -> float:
     "Product of a list using `reduce` and `mul`."
-    # TODO: Implement for Task 0.3.
-    raise NotImplementedError("Need to implement for Task 0.3")
+    multiplier = reduce(mul)
+    return multiplier(ls)

@@ -3,7 +3,7 @@ Collection of the core mathematical operators used throughout the code base.
 """
 
 import math
-from typing import Callable, Iterable
+from typing import Any, Callable, Iterable, List
 
 # ## Task 0.1
 #
@@ -50,7 +50,8 @@ def is_close(x: float, y: float) -> float:
     return float(abs(x - y) < 1e-2)
 
 
-def sigmoid(x: float) -> float:
+def sigmoid(x: float) -> Any:
+    # see https://github.com/python/typeshed/issues/7733 for why typing is Any
     r"""
     $f(x) =  \frac{1.0}{(1.0 + e^{-x})}$
 
@@ -63,7 +64,7 @@ def sigmoid(x: float) -> float:
     for stability.
     """
     if x >= 0:
-        return 1.0/(1.0 + math.e**(-x))
+        return 1.0 / (1.0 + math.e ** (-x))
     return math.e**x / (1.0 + math.e**x)
 
 
@@ -91,12 +92,12 @@ def exp(x: float) -> float:
 
 def log_back(x: float, d: float) -> float:
     r"If $f = log$ as above, compute $d \times f'(x)$"
-    return d * (1/x)
+    return d * (1 / x)
 
 
 def inv(x: float) -> float:
     "$f(x) = 1/x$"
-    return 1/x
+    return 1 / x
 
 
 def inv_back(x: float, d: float) -> float:
@@ -106,7 +107,7 @@ def inv_back(x: float, d: float) -> float:
 
 def relu_back(x: float, d: float) -> float:
     r"If $f = relu$ compute $d \times f'(x)$"
-    if x <=0:
+    if x <= 0:
         return 0.0
     return d * 1.0
 
@@ -129,19 +130,22 @@ def map(fn: Callable[[float], float]) -> Callable[[Iterable[float]], Iterable[fl
         A function that takes a list, applies `fn` to each element, and returns a
          new list
     """
-    # TODO: Implement for Task 0.3.
-    raise NotImplementedError("Need to implement for Task 0.3")
+
+    def result(input_list: Iterable[float]) -> Iterable[float]:
+        return [fn(x) for x in input_list]
+
+    return result
 
 
 def negList(ls: Iterable[float]) -> Iterable[float]:
     "Use `map` and `neg` to negate each element in `ls`"
-    # TODO: Implement for Task 0.3.
-    raise NotImplementedError("Need to implement for Task 0.3")
+    negator = map(neg)
+    return negator(ls)
 
 
 def zipWith(
     fn: Callable[[float, float], float]
-) -> Callable[[Iterable[float], Iterable[float]], Iterable[float]]:
+) -> Callable[[Iterable[float], List[float]], Iterable[float]]:
     """
     Higher-order zipwith (or map2).
 
@@ -155,42 +159,53 @@ def zipWith(
          applying fn(x, y) on each pair of elements.
 
     """
-    # TODO: Implement for Task 0.3.
-    raise NotImplementedError("Need to implement for Task 0.3")
+
+    def result(ls1: Iterable[float], ls2: List[float]) -> Iterable[float]:
+        new_list = [fn(x, ls2[i]) for i, x in enumerate(ls1)]
+        return new_list
+
+    return result
 
 
-def addLists(ls1: Iterable[float], ls2: Iterable[float]) -> Iterable[float]:
+def addLists(ls1: Iterable[float], ls2: List[float]) -> Iterable[float]:
     "Add the elements of `ls1` and `ls2` using `zipWith` and `add`"
-    # TODO: Implement for Task 0.3.
-    raise NotImplementedError("Need to implement for Task 0.3")
+    adder = zipWith(add)
+    return adder(ls1, ls2)
 
 
-def reduce(
-    fn: Callable[[float, float], float], start: float
-) -> Callable[[Iterable[float]], float]:
+def reduce(fn: Callable[[float, float], float]) -> Callable[[List[float]], float]:
     r"""
     Higher-order reduce.
 
     Args:
         fn: combine two values
-        start: start value $x_0$
 
     Returns:
         Function that takes a list `ls` of elements
          $x_1 \ldots x_n$ and computes the reduction :math:`fn(x_3, fn(x_2,
          fn(x_1, x_0)))`
     """
-    # TODO: Implement for Task 0.3.
-    raise NotImplementedError("Need to implement for Task 0.3")
+
+    def result(ls: List[float]) -> Any:
+        def recursive_function(i: int, ls: List[float]) -> Any:
+            if i > 0:
+                return fn(ls[i], recursive_function(i - 1, ls))
+            return ls[i]
+
+        if ls == []:
+            return 0
+        return recursive_function(len(ls) - 1, ls)
+
+    return result
 
 
-def sum(ls: Iterable[float]) -> float:
+def summation(ls: List[float]) -> float:
     "Sum up a list using `reduce` and `add`."
-    # TODO: Implement for Task 0.3.
-    raise NotImplementedError("Need to implement for Task 0.3")
+    adder = reduce(add)
+    return adder(ls)
 
 
-def prod(ls: Iterable[float]) -> float:
+def prod(ls: List[float]) -> float:
     "Product of a list using `reduce` and `mul`."
-    # TODO: Implement for Task 0.3.
-    raise NotImplementedError("Need to implement for Task 0.3")
+    multiplier = reduce(mul)
+    return multiplier(ls)

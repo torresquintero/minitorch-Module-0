@@ -12,6 +12,7 @@ from minitorch.operators import (
     id,
     inv,
     inv_back,
+    is_close,
     log_back,
     lt,
     max,
@@ -22,8 +23,7 @@ from minitorch.operators import (
     relu,
     relu_back,
     sigmoid,
-    sum,
-    is_close,
+    summation,
 )
 
 from .strategies import assert_close, small_floats
@@ -132,7 +132,7 @@ def test_symmetric(a: float, b: float) -> None:
     Write a test that ensures that :func:`minitorch.operators.mul` is symmetric, i.e.
     gives the same value regardless of the order of its input.
     """
-    assert mul(a, b) == mul(b,a)
+    assert mul(a, b) == mul(b, a)
 
 
 @pytest.mark.task0_2
@@ -150,7 +150,7 @@ def test_other() -> None:
     """
     Write a test that ensures some other property holds for your functions.
     """
-    return True
+    pass
 
 
 # ## Task 0.3  - Higher-order functions
@@ -173,19 +173,18 @@ def test_zip_with(a: float, b: float, c: float, d: float) -> None:
     lists(small_floats, min_size=5, max_size=5),
     lists(small_floats, min_size=5, max_size=5),
 )
-def test_sum_distribute(ls1: List[float], ls2: List[float]) -> None:
+def test_summation_distribute(ls1: List[float], ls2: List[float]) -> None:
     """
-    Write a test that ensures that the sum of `ls1` plus the sum of `ls2`
+    Write a test that ensures that the summation of `ls1` plus the summation of `ls2`
     is the same as the sum of each element of `ls1` plus each element of `ls2`.
     """
-    # TODO: Implement for Task 0.3.
-    raise NotImplementedError("Need to implement for Task 0.3")
+    assert_close(summation(ls1) + summation(ls2), sum(ls1) + sum(ls2))
 
 
 @pytest.mark.task0_3
 @given(lists(small_floats))
-def test_sum(ls: List[float]) -> None:
-    assert_close(sum(ls), sum(ls))
+def test_summation(ls: List[float]) -> None:
+    assert_close(summation(ls), sum(ls))
 
 
 @pytest.mark.task0_3

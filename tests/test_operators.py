@@ -12,6 +12,7 @@ from minitorch.operators import (
     id,
     inv,
     inv_back,
+    is_close,
     log_back,
     lt,
     max,
@@ -23,7 +24,6 @@ from minitorch.operators import (
     relu_back,
     sigmoid,
     summation,
-    is_close,
 )
 
 from .strategies import assert_close, small_floats
@@ -132,7 +132,7 @@ def test_symmetric(a: float, b: float) -> None:
     Write a test that ensures that :func:`minitorch.operators.mul` is symmetric, i.e.
     gives the same value regardless of the order of its input.
     """
-    assert mul(a, b) == mul(b,a)
+    assert mul(a, b) == mul(b, a)
 
 
 @pytest.mark.task0_2
@@ -150,7 +150,7 @@ def test_other() -> None:
     """
     Write a test that ensures some other property holds for your functions.
     """
-    return True
+    pass
 
 
 # ## Task 0.3  - Higher-order functions
